@@ -137,10 +137,12 @@ class MetarWeatherPlugin(Star):
         # FSD 连线地址（KY飞行平台 / 寰宇航空 网络），供在线飞行员与管制员连接
         self.fsd_address: str = str(config.get("fsd_address", "fsd.kyfly.online")).strip()
         self.fsd_port: int = int(config.get("fsd_port", 6809))
-        # 该命令仅在此群号内生效（防止被其他群误用）
-        self.fsd_allowed_group: str = str(
-            config.get("fsd_allowed_group", "705230229")
-        ).strip()
+        # 该命令仅在此群号内生效（防止被其他群误用）；支持多个群号，用逗号/空格分隔
+        allowed_raw = str(config.get("fsd_allowed_group", "705230229")).strip()
+        self.fsd_allowed_group: str = allowed_raw
+        self.fsd_allowed_groups: list = [
+            g.strip() for g in allowed_raw.replace("，", ",").split(",") if g.strip()
+        ]
         # 飞友科技(VariFlight) Aviation API Key，用于 /飞机 实时定位查询
         self.variflight_api_key: str = str(
             config.get("variflight_api_key", "")
@@ -744,11 +746,12 @@ class MetarWeatherPlugin(Star):
         仅限配置中的群号（默认 705230229）使用；其他群或私聊会拒绝。
         用法：/fsd  （或 /在线、/连线）
         """
-        allowed = (self.fsd_allowed_group or "").strip()
+        allowed = self.fsd_allowed_group or "705230229"
         gid = event.get_group_id()
-        if not gid or str(gid).strip() != allowed:
+        if not gid or str(gid).strip() not in self.fsd_allowed_groups:
             yield event.plain_result(
-                f"⛔ 该命令仅限群 {allowed} 使用。"
+                f"⛔ 该命令仅限群 {allowed} 使用。\n"
+                f"（当前消息来自群：{gid or '私聊/未知'}）"
             )
             return
 
@@ -773,11 +776,12 @@ class MetarWeatherPlugin(Star):
         仅限配置中的群号（默认 705230229）使用；其他群或私聊会拒绝。
         用法：/fsd名单  （或 /在线名单、/名单、/roster）
         """
-        allowed = (self.fsd_allowed_group or "").strip()
+        allowed = self.fsd_allowed_group or "705230229"
         gid = event.get_group_id()
-        if not gid or str(gid).strip() != allowed:
+        if not gid or str(gid).strip() not in self.fsd_allowed_groups:
             yield event.plain_result(
-                f"⛔ 该命令仅限群 {allowed} 使用。"
+                f"⛔ 该命令仅限群 {allowed} 使用。\n"
+                f"（当前消息来自群：{gid or '私聊/未知'}）"
             )
             return
 
