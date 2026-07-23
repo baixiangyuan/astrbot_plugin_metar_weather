@@ -1,0 +1,7 @@
+name: astrbot_plugin_metar_weather
+display_name: 机场天气 / 预报 / 通播
+author: WorkBuddy
+version: 2.0.0
+desc: 通过 efb.dubhenexus.org 真实机场 API 查询全球（含中国）机场的实时天气(METAR)、天气预报(TAF)、机场信息、Jeppesen 航图与机场通播(ATIS)；提供 FSD 连线地址（/fsd，仅限指定群）；并通过飞友科技(VariFlight) Aviation 数据按飞机注册号查询实时定位（/飞机，含航班/经纬度/高度/速度/航向）。发送「/天气 ZBAA」获取实时气象，「/预报 ZBAA」获取预报，「/航图 ZBAA」获取航图，「/通播 ZBAA」获取通播，「/飞机 B6392」查询飞机实时位置。
+short_desc: 机场天气/预报/航图/通播 + FSD连线地址 + 飞机实时定位（/天气 /预报 /机场 /航图 /通播 /fsd /飞机）
+astrbot_version: ">=3.4,<5"

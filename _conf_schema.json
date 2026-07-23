@@ -1,0 +1,104 @@
+{
+  "api_base": {
+    "type": "string",
+    "title": "机场数据接口地址",
+    "description": "查询机场天气/预报/信息的接口基础地址（最后不带 /ICAO）。默认使用 efb.dubhenexus.org 真实机场 API（覆盖中国及全球机场）。",
+    "default": "https://efb.dubhenexus.org/api/airports"
+  },
+  "metar_api": {
+    "type": "string",
+    "title": "天气(METAR)接口地址",
+    "description": "查询机场实时天气(METAR)的接口地址，/天气 命令优先使用此源。默认使用 KY飞行平台 kyfly.online 的 METAR 接口（覆盖国内机场更全）；查询不到时会自动回退到「机场数据接口」。接口形如 xxx?icao=，末尾不带 ICAO。",
+    "default": "https://www.kyfly.online/api/metar"
+  },
+  "timeout": {
+    "type": "int",
+    "title": "请求超时时间(秒)",
+    "description": "网络请求的最长等待时间，超时将提示查询失败。",
+    "default": 10
+  },
+  "atis_api": {
+    "type": "string",
+    "title": "自建通播服务地址(可选)",
+    "description": "若你单独部署了通播服务(如附带的 server.py)，填写其基础地址(如 http://127.0.0.1:8000)。留空则使用插件内置逻辑。",
+    "default": ""
+  },
+  "charts_api": {
+    "type": "string",
+    "title": "航图(Jeppesen)接口地址",
+    "description": "查询机场航图的接口地址。默认使用 efb.dubhenexus.org 真实航图 API（Jeppesen 航图，覆盖中国及全球机场，返回每张航图直链 PNG）。一般无需修改。",
+    "default": "https://efb.dubhenexus.org/api/jeppesen"
+  },
+  "charts_rules": {
+    "type": "string",
+    "title": "航图规则(IFR/CVFR)",
+    "description": "航图类型规则。IFR 或 CVFR（VFR 多数机场为空）。默认 IFR。",
+    "default": "IFR"
+  },
+  "charts_image_count": {
+    "type": "int",
+    "title": "航图直发图片数量",
+    "description": "使用 /航图 时直接发到聊天里的航图图片数量（按分类轮询挑选代表性图片）。设 0 则只发文字清单与链接、不发图片。默认 6。",
+    "default": 6
+  },
+  "fsd_address": {
+    "type": "string",
+    "title": "FSD服务器地址",
+    "description": "FSD 连线服务器地址（供在线飞行员与管制员连接）。默认 fsd.kyfly.online（KY飞行平台 / 寰宇航空 网络）。",
+    "default": "fsd.kyfly.online"
+  },
+  "fsd_port": {
+    "type": "int",
+    "title": "FSD端口",
+    "description": "FSD 服务器端口（默认 6809，FSD 协议常用端口）。如实际网络使用了其他端口，请在此修改。",
+    "default": 6809
+  },
+  "fsd_allowed_group": {
+    "type": "string",
+    "title": "FSD命令允许群号",
+    "description": "仅在此群号内，/fsd、/fsd名单 等 FSD 相关命令才会生效；其他群或私聊会拒绝。默认 705230229。",
+    "default": "705230229"
+  },
+  "fsd_clients_api": {
+    "type": "string",
+    "title": "空翼在线客户端接口",
+    "description": "空翼(KY飞行)平台「在线客户端」接口地址，返回所有在线飞行员与管制员（whazzup v3 格式，MCP 的 get_online_clients 即调此接口）。默认走标准 443 端口 https://www.kyfly.online/api/clients（更通用可达）；也可改用 https://www.kyfly.online:6810/api/clients。插件已自动跳过证书校验并走系统代理。",
+    "default": "https://www.kyfly.online/api/clients"
+  },
+  "fsd_roster_limit": {
+    "type": "int",
+    "title": "在线名单每类上限",
+    "description": "在线名单中，飞行员 / 管制员各自最多展示的条数；超出部分显示「还有 N 名」。默认 30。",
+    "default": 30
+  },
+  "variflight_api_key": {
+    "type": "string",
+    "title": "飞友科技 API Key",
+    "description": "飞友科技(VariFlight) Aviation API Key，用于 /飞机 命令查询飞机实时定位。申请地址：https://ai.variflight.com （请按需替换为自己的 Key）。",
+    "default": "sk-tbi9uT0xTiKJO68f-u8h2YRzDYdR7In6BeGPVUZIs5g"
+  },
+  "variflight_mcp_url": {
+    "type": "string",
+    "title": "飞友科技 MCP 地址",
+    "description": "飞友科技 Aviation MCP (Streamable HTTP) 地址。一般无需修改。",
+    "default": "https://ai.variflight.com/servers/aviation/mcp/"
+  },
+  "route_api": {
+    "type": "string",
+    "title": "航路查询接口(最高优先)",
+    "description": "两机场间推荐航路的主数据源接口地址（最高优先）。支持 {dep}/{arr} 占位符，例如 https://example.com/route?from={dep}&to={arr} 或 https://example.com/api/route/{dep}/{arr}。留空则跳过，走下方默认在线源 skylitefly。",
+    "default": ""
+  },
+  "skylitefly_api": {
+    "type": "string",
+    "title": "skylitefly 航路引擎",
+    "description": "dubhenexus 航路查询页面实际调用的公开在线航路引擎 base URL（navigation.api.skylitefly.com/api/routes/plan）。免费、无需鉴权、无需自托管，默认作为首选在线数据源，返回完整航路字符串、双单位距离、SID/STAR 程序与 AIRAC 导航周期。留空则关闭该源。优先级：route_api > skylitefly > openRouteFinder > MyChinaFlight。",
+    "default": "https://navigation.api.skylitefly.com/api/routes/plan"
+  },
+  "openroutefinder_api": {
+    "type": "string",
+    "title": "openRouteFinder 实例地址",
+    "description": "开源飞行模拟航路算法引擎 openRouteFinder 的实例 base URL（如 http://127.0.0.1:9807）。插件会向其 POST /api/route 计算两机场间最短航路（Dijkstra，含 SID/STAR 进离场）。该实例需在配置中设置 disable_captcha=true 才能免验证码自动调用；且必须已加载导航数据文件 navdata_*.fb.zst（Fenix 数据，需自备），否则返回 404。留空则不启用该数据源。优先级介于 route_api 与 MyChinaFlight 之间。",
+    "default": ""
+  }
+}
